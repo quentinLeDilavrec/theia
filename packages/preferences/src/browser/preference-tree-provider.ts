@@ -17,7 +17,9 @@
 import { inject, injectable, postConstruct } from 'inversify';
 import * as fuzzy from 'fuzzy';
 import { debounce } from 'lodash';
-import { TreeNode, CompositeTreeNode, PreferenceSchemaProvider, PreferenceDataSchema, PreferenceDataProperty, PreferenceScope } from '@theia/core/lib/browser';
+import {
+    TreeNode, CompositeTreeNode, PreferenceSchemaProvider, PreferenceDataSchema, PreferenceDataProperty, PreferenceScope,
+} from '@theia/core/lib/browser';
 import { PreferenceConfigurations } from '@theia/core/lib/browser/preferences/preference-configurations';
 import { PreferencesEventService } from './util/preference-event-service';
 import { PreferenceTreeGenerator } from './util/preference-tree-generator';
@@ -133,7 +135,7 @@ export class PreferencesTreeProvider {
                     !this._isFiltered // search too short.
                     || fuzzy.test(this.lastSearchedFuzzy, tree.id || '') // search matches preference name.
                     // search matches description. Fuzzy isn't ideal here because the score depends on the order of discovery.
-                    || (this.baseSchema.properties[tree.id].description || '').includes(this.lastSearchedLiteral)
+                    || (this.baseSchema.properties[tree.id]?.description || '').includes(this.lastSearchedLiteral)
                 );
         }
 

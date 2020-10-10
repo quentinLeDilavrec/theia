@@ -59,6 +59,17 @@ export interface PreferenceDataSchema {
     };
 }
 
+export interface PreferenceDataSchema2 {
+    [name: string]: any,
+    scope?: PreferenceScope,
+    properties: {
+        [name: string]: ModifiablePreferenceDataProperty
+    }
+    patternProperties: {
+        [name: string]: PreferenceDataProperty
+    };
+}
+
 export interface PreferenceItem {
     type?: JsonType | JsonType[];
     minimum?: number;
@@ -76,6 +87,7 @@ export interface PreferenceItem {
     additionalProperties?: object | boolean;
     [name: string]: any;
     overridable?: boolean;
+    hidden?: boolean;
 }
 
 export interface PreferenceSchemaProperty extends PreferenceItem {
@@ -98,6 +110,37 @@ export namespace PreferenceDataProperty {
         }
         return <PreferenceDataProperty>schemaProps;
     }
+}
+
+export interface ModifiablePreferenceDataProperty {
+    propertySchema?: PreferenceDataProperty,
+    modifications?: PreferenceSchemaPropertyModification,
+}
+export namespace ModifiablePreferenceDataProperty {
+    export function schema(property: ModifiablePreferenceDataProperty): PreferenceDataProperty | undefined {
+        if (property.propertySchema) {
+            const modifications = property.modifications ?? {};
+            return { ...property.propertySchema, ...modifications };
+        }
+    }
+}
+
+export interface PreferenceSchemaModification {
+    properties: PreferenceSchemaPropertyModifications
+}
+
+export interface PreferenceSchemaPropertyModifications {
+    [name: string]: PreferenceSchemaPropertyModification
+}
+
+export interface PreferenceSchemaPropertyModification {
+    minimum?: number;
+    default?: any;
+    // defaultValue?: any;
+    enum: string[] | undefined;
+    enumDescriptions?: string[];
+    description?: string;
+    hidden?: boolean;
 }
 
 export type JsonType = 'string' | 'array' | 'number' | 'integer' | 'object' | 'boolean' | 'null';
